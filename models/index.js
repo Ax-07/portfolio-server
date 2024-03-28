@@ -1,8 +1,23 @@
-const dbConfig = require("./../config/db.config.js"); // Importation de la configuration de la base de données
+// const dbConfig = require("./../config/db.config.js"); // Importation de la configuration de la base de données
 const {Sequelize}  = require("sequelize"); // Importation de Sequelize, un ORM pour gérer la base de données SQL
 
-const sequelize = new Sequelize('project6-db', 'user', 'pass', dbConfig);
-
+const sequelize = new Sequelize(process.env.POSTGRES_URL, {
+    dialect: 'postgres',
+    dialectModule: require('pg'),
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000
+    },
+    dialectOptions: {
+        connectTimeout: 60000,
+        ssl: {
+          require: true,
+          rejectUnauthorized: false
+        }
+      }
+});
 const db = {}; // Création d'un objet vide pour stocker les modèles de la base de données
 
 db.Sequelize = Sequelize; // Ajout de Sequelize à l'objet db

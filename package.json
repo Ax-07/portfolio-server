@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@vercel/blob": "^0.22.1",
     "bcrypt": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -22,6 +23,7 @@
     "multer": "1.4.5-lts.1",
     "nodemailer": "^6.9.3",
     "nodemon": "^2.0.22",
+    "pg": "^8.11.3",
     "sequelize": "^6.36.0",
     "sharp": "^0.33.2",
     "sitemap": "^7.1.1",

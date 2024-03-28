@@ -5,18 +5,30 @@ const path = require('path'); // Importation du module path pour gérer les chem
 const { Op } = require('sequelize'); // Importation de l'opérateur Sequelize pour les opérations de comparaison
 
 // Création et enregistrement d'un nouveau projet
-exports.createProjet = (req, res) => {
+exports.createProjet = async (req, res) => {
     // Validation de la requête
     if (!req.body.title) {
         res.status(400).json({ message: "Le contenu ne peut pas être vide !" });
         return;
     }
+    let blobImages = [];
+
+    if (req.files['image']) {
+        const imagePromises = req.files['image'].map(async file => {
+            const blobImage = await put(file.originalname, file.buffer, { access: 'public' });
+            console.log(file.originalname);
+            return blobImage;
+        });
+
+        blobImages = await Promise.all(imagePromises);
+    }
+
     // Création d'un projet
     const projet = {
         title: req.body.title,
         categorie: req.body.categorie,
         description: req.body.description,
-        image: res.locals.files,
+        image: blobImages,
         fonctionnalite: req.body.fonctionnalite,
         stack: req.body.stack,
         githubRepository: req.body.githubRepository,

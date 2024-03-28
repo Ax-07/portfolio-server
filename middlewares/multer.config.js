@@ -22,7 +22,7 @@ const MIME_TYPES = {
 const upload = multer({
     storage: multer.memoryStorage(),
     limits: {
-        fileSize: 15 * 1024 * 1024, // Limite à 15MB
+        fileSize: 50 * 1024 * 1024, // Limite à 15MB
     }
 }).any();
 
