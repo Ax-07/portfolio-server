@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser'); // Importation du module cookie-p
 require('dotenv').config({ path: ".env"});
 
 const corsOptions = {
-  origin: 'http://localhost:5173', // Remplacez par l'origine de votre client
+  origin: process.env.URL_ORIGIN, // Remplacez par l'origine de votre client
   credentials: true // Autorise les cookies
 };
 app.use(cors(corsOptions)); // Configuration de l'application pour utiliser le module cors
