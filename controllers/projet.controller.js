@@ -17,7 +17,7 @@ exports.createProjet = async (req, res) => {
         const imagePromises = req.files['image'].map(async file => {
             const blobImage = await put(file.originalname, file.buffer, { access: 'public' });
             console.log(file.originalname);
-            return blobImage;
+            return blobImage.url;
         });
 
         blobImages = await Promise.all(imagePromises);
