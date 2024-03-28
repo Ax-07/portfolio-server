@@ -55,13 +55,14 @@ app.get('/jwtid', requireAdminAuth, (req, res) => {
 app.use((err, req, res, next) => {
     res.status(500).json({ error: 'Erreur interne du serveur' });
   });
+// Route principale
+  app.use('/', (req, res) => {
+    res.send('Hello World!');
+    });
   // Gestion des routes non trouvées (404)
 app.use((req, res) => {
     res.status(404).json({ error: 'Route non trouvée' });
   });
-  app.use('/', (req, res) => {
-    res.send('Hello World!');
-    });
 const port = process.env.PORT || 8050; // Définition du port sur lequel le serveur sera lancé
 // Démarrage du serveur sur le port spécifié
 app.listen(port, () => {
