@@ -3,7 +3,7 @@ const Projet = db.projet; // on recupère le model projet
 const fs = require('fs'); // Importation du module fs pour gérer les fichiers
 const path = require('path'); // Importation du module path pour gérer les chemins de fichiers
 const { Op } = require('sequelize'); // Importation de l'opérateur Sequelize pour les opérations de comparaison
-
+const { del } = require('@vercel/blob'); // Importation de la fonction del depuis le module @vercel/blob
 // Création et enregistrement d'un nouveau projet
 exports.createProjet = (req, res) => {
     // Validation de la requête
@@ -101,8 +101,6 @@ for (let image of projet.image) {
         const url = new URL(image.image[type]);
         // Extraire le nom du fichier de l'URL de l'image
         const filename = path.basename(url.pathname);
-        // Construire le chemin complet de l'image sur le serveur
-        const imagePath = path.join(__dirname, '..', 'public', 'images', filename);
         // Initialiser un indicateur pour vérifier si l'image est utilisée ailleurs
         let isImageUsedElsewhere = false;
         // Récupérer tous les projets sauf celui que nous supprimons
@@ -127,15 +125,10 @@ for (let image of projet.image) {
                 break;
             }
         }
-        // Si l'image n'est pas utilisée ailleurs et qu'elle existe sur le serveur, la supprimer
-        if (!isImageUsedElsewhere && fs.existsSync(imagePath)) {
-            fs.unlink(imagePath, err => {
-                // En cas d'erreur lors de la suppression, afficher l'erreur
-                if (err) {
-                    console.error(err);
-                }
-            });
-        }
+            // Si l'image n'est pas utilisée ailleurs, la supprimer de Vercel
+            if (!isImageUsedElsewhere) {
+                await del(url.toString());
+            }
     }
 }
     // Suppression du projet
