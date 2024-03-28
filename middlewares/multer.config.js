@@ -9,6 +9,7 @@ const path = require('path');
 
 // Importation de la fonction formatDate depuis le fichier utils/formatDate
 const { formatDate } = require('../utils/formatDate');
+const {put} = require('@vercel/blob');
 
 // Définition des types MIME pour déterminer le format des images
 const MIME_TYPES = {
@@ -29,16 +30,20 @@ const upload = multer({
 const DESKTOP_SIZE = 1280;
 const TABLET_SIZE = 768;
 const MOBILE_SIZE = 375;
-const IMAGE_QUALITY = 80;
+const IMAGE_QUALITY = 90;
 
 // Fonction pour redimensionner et convertir une image en WebP avec une qualité donnée et un préfixe spécifique pour le nom du fichier (desktop, tablet, mobile)
 const processImage = async (file, size, prefix) => {
     const imagePath = `${prefix}-${file.originalname.split('.').slice(0, -1).join('_')}.webp`; // Nom du fichier
-    await sharp(file.buffer)
+    const imageBuffer = await sharp(file.buffer)
         .resize(size) // Redimensionne l'image à la taille spécifiée (desktop, tablet, mobile)
         .webp({ quality: IMAGE_QUALITY }) // Convertit l'image en WebP avec une qualité de 80%
-        .toFile(path.join(__dirname, '..', 'public', 'images', imagePath)); // Enregistre l'image dans le dossier public/images
-    return imagePath; // Retourne le nom du fichier
+        .toBuffer(); // Convertit l'image en buffer
+
+    // Envoie l'image à Vercel
+    const blob = await put(imagePath, imageBuffer, { access: 'public' });
+
+    return blob.url; // Retourne l'URL de l'image sur Vercel
 }
 // Exportation d'un middleware qui gère l'upload des fichiers et les erreurs potentielles
 module.exports = (req, res, next) => {
@@ -56,15 +61,15 @@ module.exports = (req, res, next) => {
         try {
             if (req.files) {
                 res.locals.files = await Promise.all(req.files.map(async (file, index) => {
-                    const desktopImagePath = await processImage(file, DESKTOP_SIZE, 'desktop');
-                    const tabletImagePath = await processImage(file, TABLET_SIZE, 'tablet');
-                    const mobileImagePath = await processImage(file, MOBILE_SIZE, 'mobile');
-
+                    const desktopImageUrl = await processImage(file, DESKTOP_SIZE, 'desktop');
+                    const tabletImageUrl = await processImage(file, TABLET_SIZE, 'tablet');
+                    const mobileImageUrl = await processImage(file, MOBILE_SIZE, 'mobile');
+                    
                     return {
                         image: {
-                            desktop: host + '/images/' + desktopImagePath,
-                            tablet: host + '/images/' + tabletImagePath,
-                            mobile: host + '/images/' + mobileImagePath,
+                            desktop: desktopImageUrl,
+                            tablet: tabletImageUrl,
+                            mobile: mobileImageUrl,
                         },
                         alt: req.body[`alt${index}`]
                     }; // Retourne un objet avec les URLs des différentes versions de l'image
