@@ -27,7 +27,6 @@
     "sequelize": "^6.36.0",
     "sharp": "^0.33.2",
     "sitemap": "^7.1.1",
-    "sqlite3": "^5.1.7",
     "swagger-ui-express": "^5.0.0",
     "yamljs": "^0.3.0"
   }
