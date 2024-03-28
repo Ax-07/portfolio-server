@@ -1,0 +1,141 @@
+openapi: 3.0.0
+info: 
+  title: Todo API
+  description: simple API pour gérer une liste de tâches
+  version: 1.0.0
+servers:
+  - url: http://localhost:8050/api
+    description: Serveur de développement
+paths:
+  /todos:
+    get:
+      summary: Récupérer la liste des tâches
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Todo'
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+    post:
+      summary: Ajouter une tâche
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Todo'
+      responses:
+        '201':
+          description: Créé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  /todos/{id}:
+    get:
+      summary: Récupérer une tâche
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+    put:
+      summary: Mettre à jour une tâche
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Todo'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+    delete:
+      summary: Supprimer une tâche
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+components:
+  schemas:
+    Todo:
+      type: object
+      description: "Le modèle Todo. Lorsqu'une image est téléchargée, le backend crée trois versions différentes (desktop, tablette, mobile) qui sont stockées dans le tableau 'images'."
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        description:
+          type: string
+        images: 
+          type: array
+          description: "Un tableau d'objets, chaque objet contenant les URLs des versions desktop, tablette et mobile de l'image. Ces versions sont créées automatiquement par le backend lors du téléchargement de l'image."
+          items: 
+            type: object
+            properties:
+              desktop:
+                type: string
+              tablet:
+                type: string
+              mobile:
+                type: string
+        status:
+          type: boolean
+      required:
+        - id
+        - title
+        - status
