@@ -59,7 +59,9 @@ app.use((err, req, res, next) => {
 app.use((req, res) => {
     res.status(404).json({ error: 'Route non trouvée' });
   });
-
+  app.use('/', (req, res) => {
+    res.send('Hello World!');
+    });
 const port = process.env.PORT || 8050; // Définition du port sur lequel le serveur sera lancé
 // Démarrage du serveur sur le port spécifié
 app.listen(port, () => {
