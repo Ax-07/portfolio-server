@@ -46,10 +46,10 @@ app.get('/jwtid', requireAdminAuth, (req, res) => {
 });
 
 // Swagger API documentation
-const swaggerUi = require('swagger-ui-express'); // Importation du module swagger-ui-express
-const yaml = require('yamljs'); // Importation du module yamljs
-const swaggerDocs = yaml.load('swagger.yaml'); // Importation du fichier swagger.yaml
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs)); // Configuration de swagger-ui-express pour servir la documentation Swagger
+// const swaggerUi = require('swagger-ui-express'); // Importation du module swagger-ui-express
+// const yaml = require('yamljs'); // Importation du module yamljs
+// const swaggerDocs = yaml.load('swagger.yaml'); // Importation du fichier swagger.yaml
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs)); // Configuration de swagger-ui-express pour servir la documentation Swagger
 
 // Gestion des erreurs
 app.use((err, req, res, next) => {
