@@ -13,27 +13,31 @@ exports.createProjet = async (req, res) => {
     }
     let blobImages = [];
 
-    if (req.files['image']) {
-        const imagePromises = req.files['image'].map(async file => {
-            const blobImage = await put(file.originalname, file.buffer, { access: 'public' });
-            console.log(file.originalname);
-            return blobImage.url;
-        });
+    // if (req.files['image']) {
+    //     const imagePromises = req.files['image'].map(async file => {
+    //         const url = await put(file.originalname, file.buffer, { access: 'public' });
+    //         console.log(file.originalname);
+    //         return url;
+    //     });
 
-        blobImages = await Promise.all(imagePromises);
-    }
+    //     blobImages = await Promise.all(imagePromises);
+    // }
 
+    // if (res.locals.files) {
+    //     blobImages = res.locals.files;
+    // }
     // Création d'un projet
     const projet = {
         title: req.body.title,
         categorie: req.body.categorie,
         description: req.body.description,
-        image: blobImages,
+        image: res.locals.files,
         fonctionnalite: req.body.fonctionnalite,
         stack: req.body.stack,
         githubRepository: req.body.githubRepository,
         website: req.body.website
     };
+    console.log(blobImages)
     // Sauvegarde du projet dans la base de données
     Projet.create(projet)
         .then(data => {
