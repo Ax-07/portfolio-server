@@ -91,7 +91,7 @@ exports.deleteProjet = async (req, res) => {
         res.status(404).json({ message: `Impossible de supprimer le projet avec l'id ${id}. Le projet n'a pas été trouvé !` });
         return;
     }
-    console.log(projet.image[0]);
+    // console.log(projet.image[0]);
     // Supprimer les images
 // Parcourir toutes les images du projet
 for (let image of projet.image) {
@@ -128,6 +128,7 @@ for (let image of projet.image) {
             // Si l'image n'est pas utilisée ailleurs, la supprimer de Vercel
             if (!isImageUsedElsewhere) {
                 await del(url.toString());
+                res.status(200).json({ message: "L'image a été supprimée avec succès !" });
             }
     }
 }
