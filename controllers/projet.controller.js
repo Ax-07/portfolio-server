@@ -64,10 +64,19 @@ exports.getProjetById = (req, res) => {
 // Mise à jour d'un projet par son id
 exports.updateProjet = (req, res) => {
     const id = req.params.id;
-
+    const projet = {
+        title: req.body.title,
+        categorie: req.body.categorie,
+        description: req.body.description,
+        image: res.locals.files,
+        fonctionnalite: req.body.fonctionnalite,
+        stack: req.body.stack,
+        githubRepository: req.body.githubRepository,
+        website: req.body.website
+    };
     console.log(req.body);
     // Mise à jour du projet
-    Projet.update(req.body, {
+    Projet.update(projet, {
         where: { id: id }
     })
         .then(num => {
