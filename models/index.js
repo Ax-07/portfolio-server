@@ -23,8 +23,6 @@ const db = {}; // Création d'un objet vide pour stocker les modèles de la base
 db.Sequelize = Sequelize; // Ajout de Sequelize à l'objet db
 db.sequelize = sequelize; // Ajout de l'instance de Sequelize à l'objet db
 
-db.todos = require('./todo.model.js')(sequelize, Sequelize);
-db.figure = require('./figure.model.js')(sequelize, Sequelize);
 db.projet = require('./projet.model.js')(sequelize, Sequelize);
 db.user = require('./user.model.js')(sequelize, Sequelize); 
 db.categorie = require('./categorie.model.js')(sequelize, Sequelize);
