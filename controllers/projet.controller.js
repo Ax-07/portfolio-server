@@ -129,7 +129,6 @@ exports.deleteProjet = async (req, res) => {
                 // Si l'image n'est pas utilisée ailleurs, la supprimer de Vercel
                 if (!isImageUsedElsewhere) {
                     await del(url.toString());
-                    res.status(200).json({ message: "L'image a été supprimée avec succès !" });
                 }
             }
         }
