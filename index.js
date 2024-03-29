@@ -7,6 +7,7 @@ require('dotenv').config({ path: ".env"});
 
 const corsOptions = {
   origin: process.env.URL_ORIGIN, // Remplacez par l'origine de votre client
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Méthodes autorisées
   credentials: true // Autorise les cookies
 };
 app.use(cors(corsOptions)); // Configuration de l'application pour utiliser le module cors
