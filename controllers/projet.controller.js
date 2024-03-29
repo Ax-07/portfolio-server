@@ -92,45 +92,48 @@ exports.deleteProjet = async (req, res) => {
         return;
     }
     // Supprimer les images
-// Parcourir toutes les images du projet
-for (let image of projet.image) {
-    // Parcourir tous les types d'images (desktop, mobile, tablette)
-    for (let type of ['desktop', 'mobile', 'tablet']) {
-        // Créer une nouvelle URL à partir de l'URL de l'image
-        const url = new URL(image.image[type]);
-        // Extraire le nom du fichier de l'URL de l'image
-        const filename = path.basename(url.pathname);
-        // Initialiser un indicateur pour vérifier si l'image est utilisée ailleurs
-        let isImageUsedElsewhere = false;
-        // Récupérer tous les projets sauf celui que nous supprimons
-        const allProjects = await Projet.findAll({ where: { id: { [Op.ne]: id } } });
-        // Parcourir tous les projets
-        for (let project of allProjects) {
-            // Parcourir toutes les images du projet
-            for (let projectImage of project.image) {
-                // Créer une nouvelle URL à partir de l'URL de l'image du projet
-                const projectImageUrl = new URL(projectImage.image[type]);
-                // Extraire le nom du fichier de l'URL de l'image du projet
-                const projectImageFilename = path.basename(projectImageUrl.pathname);
-                // Vérifier si le nom du fichier de l'image du projet correspond au nom du fichier de l'image que nous supprimons
-                if (projectImageFilename === filename) {
-                    // Si c'est le cas, définir l'indicateur sur true et sortir de la boucle
-                    isImageUsedElsewhere = true;
-                    break;
+    // Vérifier si project.image est défini et est un tableau
+    if (projet.image && Array.isArray(projet.image)) {
+        // Parcourir toutes les images du projet
+        for (let image of projet.image) {
+            // Parcourir tous les types d'images (desktop, mobile, tablette)
+            for (let type of ['desktop', 'mobile', 'tablet']) {
+                // Créer une nouvelle URL à partir de l'URL de l'image
+                const url = new URL(image.image[type]);
+                // Extraire le nom du fichier de l'URL de l'image
+                const filename = path.basename(url.pathname);
+                // Initialiser un indicateur pour vérifier si l'image est utilisée ailleurs
+                let isImageUsedElsewhere = false;
+                // Récupérer tous les projets sauf celui que nous supprimons
+                const allProjects = await Projet.findAll({ where: { id: { [Op.ne]: id } } });
+                // Parcourir tous les projets
+                for (let project of allProjects) {
+                    // Parcourir toutes les images du projet
+                    for (let projectImage of project.image) {
+                        // Créer une nouvelle URL à partir de l'URL de l'image du projet
+                        const projectImageUrl = new URL(projectImage.image[type]);
+                        // Extraire le nom du fichier de l'URL de l'image du projet
+                        const projectImageFilename = path.basename(projectImageUrl.pathname);
+                        // Vérifier si le nom du fichier de l'image du projet correspond au nom du fichier de l'image que nous supprimons
+                        if (projectImageFilename === filename) {
+                            // Si c'est le cas, définir l'indicateur sur true et sortir de la boucle
+                            isImageUsedElsewhere = true;
+                            break;
+                        }
+                    }
+                    // Si l'image est utilisée ailleurs, sortir de la boucle
+                    if (isImageUsedElsewhere) {
+                        break;
+                    }
+                }
+                // Si l'image n'est pas utilisée ailleurs, la supprimer de Vercel
+                if (!isImageUsedElsewhere) {
+                    await del(url.toString());
+                    res.status(200).json({ message: "L'image a été supprimée avec succès !" });
                 }
             }
-            // Si l'image est utilisée ailleurs, sortir de la boucle
-            if (isImageUsedElsewhere) {
-                break;
-            }
         }
-            // Si l'image n'est pas utilisée ailleurs, la supprimer de Vercel
-            if (!isImageUsedElsewhere) {
-                await del(url.toString());
-                res.status(200).json({ message: "L'image a été supprimée avec succès !" });
-            }
     }
-}
     // Suppression du projet
     Projet.destroy({ where: { id: id } })
         .then(num => {
