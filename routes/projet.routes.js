@@ -7,7 +7,7 @@ const multer = require('../middlewares/multer.config'); // Importation du middle
 router.get('/', projetController.getAllProjets);
 router.get('/:id', projetController.getProjetById);
 router.post('/', multer, projetController.createProjet);
-router.put('/:id', multer, projetController.updateProjet);
+router.patch('/:id', multer, projetController.updateProjet);
 router.delete('/:id', projetController.deleteProjet);
 
 module.exports = router;
