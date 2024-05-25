@@ -5,8 +5,20 @@ const cors = require('cors'); // Importation du module cors pour gerer les origi
 const cookieParser = require('cookie-parser'); // Importation du module cookie-parser pour gérer les cookies
 require('dotenv').config({ path: ".env"});
 
+
+const whitelist = [
+  process.env.URL_LOCAL,
+  process.env.URL_ORIGIN,
+  process.env.URL_ORIGIN_2,
+]; // Liste blanche des origines autorisées
 const corsOptions = {
-  origin: process.env.URL_ORIGIN, // Remplacez par l'origine de votre client
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }, // Origines autorisées
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Méthodes autorisées
   credentials: true // Autorise les cookies
 };
