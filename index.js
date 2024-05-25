@@ -10,6 +10,7 @@ const whitelist = [
   process.env.URL_LOCAL,
   process.env.URL_ORIGIN,
   process.env.URL_ORIGIN_2,
+  'https://portfolio-2-red-phi.vercel.app'
 ]; // Liste blanche des origines autorisées
 const corsOptions = {
   origin: function (origin, callback) {
