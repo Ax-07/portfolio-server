@@ -6,8 +6,7 @@ const cookieParser = require('cookie-parser'); // Importation du module cookie-p
 require('dotenv').config({ path: ".env"});
 
 const corsOptions = {
-  origin: process.env.URL_ORIGIN_2, // Remplacez par l'origine de votre client
-
+  origin: process.env.URL_ORIGIN, // Remplacez par l'origine de votre client
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Méthodes autorisées
   credentials: true // Autorise les cookies
 };
